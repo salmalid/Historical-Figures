@@ -1,4 +1,5 @@
 import logging
+import sys
 from datetime import datetime
 from typing import List, Dict, Generator
 
@@ -14,6 +15,11 @@ from utils import figures_manager, get_system_prompt, get_example_question, vali
 
 logging.basicConfig(level=logging.INFO if Config.DEBUG_MODE else logging.WARNING)
 logger = logging.getLogger(__name__)
+
+# Windows consoles default to cp1252, which cannot encode the arrows printed below
+for _stream in (sys.stdout, sys.stderr):
+    if (_stream.encoding or "").lower() not in ("utf-8", "utf8"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
 
 client = OpenAI(base_url=Config.BASE_URL, api_key=Config.NVIDIA_API_KEY)
 
